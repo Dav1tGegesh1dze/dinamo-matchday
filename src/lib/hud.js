@@ -15,3 +15,10 @@ export function createTimer(scene) {
   scene.events.on('update', () => text.setText(formatTime(Date.now() - run.startedAt)));
   return text;
 }
+
+export function flashMessage(scene, message, duration, nextKey) {
+  const { width, height } = scene.scale;
+  scene.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.6).setDepth(999);
+  scene.add.text(width / 2, height / 2, message, { fontSize: '72px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5).setDepth(1000);
+  scene.time.delayedCall(duration, () => scene.scene.start(nextKey));
+}

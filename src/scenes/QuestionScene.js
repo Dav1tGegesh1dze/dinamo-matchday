@@ -1,14 +1,82 @@
 import Phaser from 'phaser';
-import { showPlaceholder } from './placeholder.js';
+import { questions, COUNTDOWN_SECONDS, POOL_BY_STAGE } from '../data/questions.js';
+import { getLang } from '../lib/i18n.js';
 import { createTimer } from '../lib/hud.js';
 
+const BUTTON_POSITIONS = [
+  [400, 440],
+  [880, 440],
+  [400, 540],
+  [880, 540],
+];
+const BUTTON_STYLE = {
+  fontSize: '30px',
+  color: '#0b3d91',
+  backgroundColor: '#ffffff',
+  fixedWidth: 440,
+  padding: { x: 20, y: 16 },
+  align: 'center',
+};
+const REVEAL_MS = 1500;
+const CONFIRM_MS = 600;
+
+// Overlay scene. Launch with { stage: 1..4 }; emits 'answered' (true|false) on its events, then stops.
 export default class QuestionScene extends Phaser.Scene {
   constructor() {
     super('Question');
   }
 
+  init({ stage }) {
+    this.stage = stage;
+  }
+
   create() {
-    showPlaceholder(this, 'Question', 'Cutscene');
+    const { width, height } = this.scale;
+    const lang = getLang();
+    const question = Phaser.Utils.Array.GetRandom(questions[POOL_BY_STAGE[this.stage - 1]]);
+    const order = Phaser.Utils.Array.Shuffle([0, 1, 2, 3]);
+    const correctButton = order.indexOf(question.correct);
+
+    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7);
+    this.add.rectangle(width / 2, 380, 1080, 480, 0x0b3d91).setStrokeStyle(4, 0xffffff);
+    this.add
+      .text(width / 2, 250, question[lang].text, { fontSize: '40px', color: '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: { width: 1000 } })
+      .setOrigin(0.5);
+
+    this.buttons = BUTTON_POSITIONS.map(([x, y], i) =>
+      this.add
+        .text(x, y, question[lang].answers[order[i]], BUTTON_STYLE)
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerdown', () => this.answer(i, correctButton)),
+    );
+
+    const seconds = COUNTDOWN_SECONDS[this.stage - 1];
+    const bar = this.add.rectangle(120, 600, 1040, 16, 0xe30613).setOrigin(0, 0.5);
+    this.tweens.add({ targets: bar, width: 0, duration: seconds * 1000, ease: 'Linear' });
+    this.countdownText = this.add.text(1160, 600, String(seconds), { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+    this.countdown = this.time.addEvent({
+      delay: 1000,
+      repeat: seconds - 1,
+      callback: () => {
+        const left = this.countdown.getOverallRemainingSeconds();
+        this.countdownText.setText(String(Math.ceil(left)));
+        if (left <= 0) this.answer(-1, correctButton);
+      },
+    });
+
     createTimer(this);
+  }
+
+  answer(chosen, correctButton) {
+    this.countdown.remove();
+    this.buttons.forEach((b) => b.disableInteractive());
+    const correct = chosen === correctButton;
+    this.buttons[correctButton].setStyle({ backgroundColor: '#1a9e3f', color: '#ffffff' });
+    if (!correct && chosen >= 0) this.buttons[chosen].setStyle({ backgroundColor: '#e30613', color: '#ffffff' });
+    this.time.delayedCall(correct ? CONFIRM_MS : REVEAL_MS, () => {
+      this.events.emit('answered', correct);
+      this.scene.stop();
+    });
   }
 }

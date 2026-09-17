@@ -9,6 +9,8 @@ const strings = {
     roomPhysio: 'ფიზიო',
     roomShowers: 'საშხაპე',
     roomTunnel: 'გვირაბი',
+    substitutedIn: 'შედიხარ თამაშში!',
+    stayOnBench: 'დარჩი სკამზე',
   },
   en: {
     title: 'Dinamo: Road to Goal',
@@ -18,6 +20,8 @@ const strings = {
     roomPhysio: 'Physio',
     roomShowers: 'Showers',
     roomTunnel: 'Tunnel',
+    substitutedIn: 'You\'re on!',
+    stayOnBench: 'Stay on the bench',
   },
 };
 
