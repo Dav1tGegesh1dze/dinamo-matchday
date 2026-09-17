@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { showPlaceholder } from './placeholder.js';
+import { createTimer } from '../lib/hud.js';
 
 export default class PitchScene extends Phaser.Scene {
   constructor() {
@@ -8,5 +9,6 @@ export default class PitchScene extends Phaser.Scene {
 
   create() {
     showPlaceholder(this, 'Pitch', 'Result');
+    createTimer(this);
   }
 }
