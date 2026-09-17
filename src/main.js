@@ -11,6 +11,7 @@ new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
   dom: { createContainer: true },
+  physics: { default: 'arcade' },
   width: 1280,
   height: 720,
   backgroundColor: '#0b3d91',
