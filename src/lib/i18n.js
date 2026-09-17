@@ -5,11 +5,19 @@ const strings = {
     title: 'დინამო: გზა გოლისკენ',
     namePlaceholder: 'შენი სახელი',
     start: 'დაწყება',
+    roomDressing: 'გასახდელი',
+    roomPhysio: 'ფიზიო',
+    roomShowers: 'საშხაპე',
+    roomTunnel: 'გვირაბი',
   },
   en: {
     title: 'Dinamo: Road to Goal',
     namePlaceholder: 'Your name',
     start: 'Start',
+    roomDressing: 'Dressing room',
+    roomPhysio: 'Physio',
+    roomShowers: 'Showers',
+    roomTunnel: 'Tunnel',
   },
 };
 
