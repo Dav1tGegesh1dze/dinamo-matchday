@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { createInput } from '../lib/input.js';
-import { createTimer } from '../lib/hud.js';
+import { createTimer, flashMessage } from '../lib/hud.js';
 import { t } from '../lib/i18n.js';
 
 const SPEED = 150;
@@ -31,10 +31,20 @@ export default class MazeScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(spawn.x, spawn.y, 'player');
     this.player.body.setSize(24, 24);
     this.physics.add.collider(this.player, walls);
-    this.physics.add.overlap(this.player, coachZone, () => this.scene.start('Question'));
+    this.physics.add.overlap(this.player, coachZone, () => this.reachCoach());
 
     this.controls = createInput(this);
     createTimer(this);
+  }
+
+  reachCoach() {
+    this.physics.pause();
+    this.scene.get('Question').events.once('answered', (correct) => {
+      this.scene.resume();
+      flashMessage(this, t(correct ? 'substitutedIn' : 'stayOnBench'), 1500, correct ? 'Cutscene' : 'Result');
+    });
+    this.scene.pause();
+    this.scene.launch('Question', { stage: 1 });
   }
 
   update() {
