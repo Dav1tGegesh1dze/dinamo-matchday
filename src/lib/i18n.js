@@ -22,7 +22,7 @@ const strings = {
     stage4: 'მეკარე',
     leaderboard: 'საუკეთესო დროები',
     noScores: 'ჯერ არავის გაუტანია გოლი',
-    you: 'შენ',
+    confirmReset: 'წავშალოთ ყველა შედეგი?',
   },
   en: {
     title: 'Dinamo: Road to Goal',
@@ -45,7 +45,7 @@ const strings = {
     stage4: 'Goalkeeper',
     leaderboard: 'Fastest goals',
     noScores: 'Nobody has scored yet',
-    you: 'YOU',
+    confirmReset: 'Delete all results?',
   },
 };
 
