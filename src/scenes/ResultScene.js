@@ -15,7 +15,8 @@ export default class ResultScene extends Phaser.Scene {
   }
 
   create() {
-    const { width } = this.scale;
+    const { width, height } = this.scale;
+    this.add.image(width / 2, height / 2, 'bg');
     const attempt = {
       name: run.name,
       timeMs: run.finishedAt - run.startedAt,

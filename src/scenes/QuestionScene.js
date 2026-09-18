@@ -10,14 +10,9 @@ const BUTTON_POSITIONS = [
   [400, 540],
   [880, 540],
 ];
-const BUTTON_STYLE = {
-  fontSize: '30px',
-  color: '#0b3d91',
-  backgroundColor: '#ffffff',
-  fixedWidth: 440,
-  padding: { x: 20, y: 16 },
-  align: 'center',
-};
+const BUTTON_STYLE = { fontSize: '30px', color: '#0b3d91', fontStyle: 'bold' };
+const GREEN = 0x1a9e3f;
+const RED = 0xe30613;
 const REVEAL_MS = 1500;
 const CONFIRM_MS = 600;
 
@@ -51,22 +46,21 @@ export default class QuestionScene extends Phaser.Scene {
     const correctButton = order.indexOf(question.correct);
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7);
-    this.add.rectangle(width / 2, 380, 1080, 480, 0x0b3d91).setStrokeStyle(4, 0xffffff);
+    this.add.image(width / 2, 380, 'panel');
     this.add
       .text(width / 2, 250, question[lang].text, { fontSize: '40px', color: '#ffffff', fontStyle: 'bold', align: 'center', wordWrap: { width: 1000 } })
       .setOrigin(0.5);
 
-    this.buttons = BUTTON_POSITIONS.map(([x, y], i) =>
-      this.add
-        .text(x, y, question[lang].answers[order[i]], BUTTON_STYLE)
-        .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true })
-        .on('pointerdown', () => this.answer(i, correctButton)),
-    );
+    this.buttons = BUTTON_POSITIONS.map(([x, y], i) => {
+      const button = this.add.image(x, y, 'button').setInteractive({ useHandCursor: true });
+      button.on('pointerdown', () => this.answer(i, correctButton));
+      button.label = this.add.text(x, y, question[lang].answers[order[i]], BUTTON_STYLE).setOrigin(0.5);
+      return button;
+    });
 
     const seconds = COUNTDOWN_SECONDS[this.stage - 1];
-    const bar = this.add.rectangle(120, 600, 1040, 16, 0xe30613).setOrigin(0, 0.5);
-    this.tweens.add({ targets: bar, width: 0, duration: seconds * 1000, ease: 'Linear' });
+    const bar = this.add.image(120, 600, 'bar').setOrigin(0, 0.5).setScale(130, 1);
+    this.tweens.add({ targets: bar, scaleX: 0, duration: seconds * 1000, ease: 'Linear' });
     this.countdownText = this.add.text(1160, 600, String(seconds), { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
     this.countdown = this.time.addEvent({
       delay: 1000,
@@ -81,12 +75,17 @@ export default class QuestionScene extends Phaser.Scene {
     createTimer(this);
   }
 
+  paint(index, tint) {
+    this.buttons[index].setTint(tint);
+    this.buttons[index].label.setColor('#ffffff');
+  }
+
   answer(chosen, correctButton) {
     this.countdown.remove();
     this.buttons.forEach((b) => b.disableInteractive());
     const correct = chosen === correctButton;
-    this.buttons[correctButton].setStyle({ backgroundColor: '#1a9e3f', color: '#ffffff' });
-    if (!correct && chosen >= 0) this.buttons[chosen].setStyle({ backgroundColor: '#e30613', color: '#ffffff' });
+    this.paint(correctButton, GREEN);
+    if (!correct && chosen >= 0) this.paint(chosen, RED);
     this.time.delayedCall(correct ? CONFIRM_MS : REVEAL_MS, () => {
       this.events.emit('answered', correct);
       this.scene.stop();

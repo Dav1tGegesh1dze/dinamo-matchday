@@ -22,9 +22,10 @@ export default class PitchScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.add.image(width / 2, height / 2, 'pitch');
     this.add.image(GOAL.x, GOAL.y, 'goal');
-    this.opponents = STAGES.map((s) => this.add.image(s.x, s.y, s.texture));
-    this.ball = this.add.image(30, 0, 'ball');
-    this.runner = this.add.container(START.x, START.y, [this.add.image(0, 0, 'player'), this.ball]);
+    this.opponents = STAGES.map((s) => this.add.sprite(s.x, s.y, s.texture));
+    this.ball = this.add.image(30, 12, 'ball');
+    this.playerSprite = this.add.sprite(0, 0, 'player').play('player-walk');
+    this.runner = this.add.container(START.x, START.y, [this.playerSprite, this.ball]);
     createTimer(this);
     this.next(0);
   }
@@ -33,13 +34,16 @@ export default class PitchScene extends Phaser.Scene {
     if (i === STAGES.length) return this.score();
     const { stage, fail } = STAGES[i];
     const opponent = this.opponents[i];
-    this.moveTo(opponent.x - 70, opponent.y, () =>
+    this.moveTo(opponent.x - 70, opponent.y, () => {
+      this.playerSprite.anims.stop();
+      this.playerSprite.setFrame(0);
       askQuestion(this, stage, (correct) => {
+        this.playerSprite.play('player-walk');
         if (!correct) return this.lose(opponent, fail);
         if (stage === 4) finishRun(true); // the clock stops on the winning answer, not the animation
         this.beat(opponent, () => this.next(i + 1));
-      }),
-    );
+      });
+    });
   }
 
   moveTo(x, y, onComplete) {
@@ -60,6 +64,7 @@ export default class PitchScene extends Phaser.Scene {
 
   lose(opponent, messageKey) {
     finishRun(false);
+    this.playerSprite.anims.stop();
     this.tweens.add({ targets: opponent, x: this.runner.x + 30, y: this.runner.y, duration: 300, ease: 'Cubic.easeIn' });
     flashMessage(this, t(messageKey), 1500, 'Result');
   }
@@ -67,7 +72,8 @@ export default class PitchScene extends Phaser.Scene {
   score() {
     const keeper = this.opponents[STAGES.length - 1];
     this.runner.remove(this.ball);
-    this.ball.setPosition(this.runner.x + 30, this.runner.y);
+    this.ball.setPosition(this.runner.x + 30, this.runner.y + 12);
+    this.playerSprite.anims.stop();
     this.tweens.add({ targets: keeper, y: keeper.y + 90, duration: 400, ease: 'Cubic.easeOut' });
     this.tweens.add({ targets: this.ball, x: GOAL.x + 10, y: GOAL.y - 60, angle: 720, duration: 500, ease: 'Cubic.easeOut' });
     flashMessage(this, t('goal'), 2000, 'Result');

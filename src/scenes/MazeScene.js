@@ -27,12 +27,12 @@ export default class MazeScene extends Phaser.Scene {
       .filter((o) => o.type === 'label')
       .forEach((o) => this.add.text(o.x, o.y, t(o.name), { fontSize: '20px', color: '#0b3d91', fontStyle: 'bold' }).setOrigin(0.5));
 
-    this.add.image(coach.x + coach.width / 2, coach.y + coach.height / 2, 'coach');
+    this.add.sprite(coach.x + coach.width / 2, coach.y + coach.height / 2 - 8, 'coach');
     const coachZone = this.add.zone(coach.x, coach.y, coach.width, coach.height).setOrigin(0);
     this.physics.add.existing(coachZone, true);
 
     this.player = this.physics.add.sprite(spawn.x, spawn.y, 'player');
-    this.player.body.setSize(24, 24);
+    this.player.body.setSize(24, 20).setOffset(4, 26);
     this.physics.add.collider(this.player, walls);
     this.physics.add.overlap(this.player, coachZone, () => this.reachCoach());
 
@@ -91,6 +91,13 @@ export default class MazeScene extends Phaser.Scene {
   update() {
     const { x, y } = this.controls.getAxis();
     this.player.setVelocity(x * SPEED, y * SPEED);
-    this.vision.setPosition(this.player.x, this.player.y);
+    if (x || y) {
+      this.player.anims.play('player-walk', true);
+    } else {
+      this.player.anims.stop();
+      this.player.setFrame(0);
+    }
+    if (x) this.player.setFlipX(x < 0);
+    this.vision.setPosition(this.player.x, this.player.y + 8);
   }
 }
