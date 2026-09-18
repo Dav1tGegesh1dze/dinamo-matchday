@@ -156,7 +156,7 @@ load step and a failure point for no real gain on a single stand device.
 
 ```js
 const KEY = 'dinamo-leaderboard';
-export function save(attempt)      // attempt = { name, timeMs, stageReached, scored, date }
+export function save(attempt)      // attempt = { name, phone, email, timeMs, stageReached, scored, date }
 export function getAll()           // every attempt, newest last
 export function getRanked()        // getAll().filter(a => a.scored).sort((a, b) => a.timeMs - b.timeMs)
 export function exportJson()       // builds a Blob and triggers a download: dinamo-results-<date>.json
