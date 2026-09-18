@@ -7,6 +7,7 @@ import { askQuestion } from './QuestionScene.js';
 
 const SPEED = 150;
 const HINT_MS = 1500;
+const STEP_MS = 280;
 
 export default class MazeScene extends Phaser.Scene {
   constructor() {
@@ -41,6 +42,7 @@ export default class MazeScene extends Phaser.Scene {
 
     this.controls = createInput(this);
     createTimer(this);
+    this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.player.body.speed > 0 && this.sound.play('step') });
   }
 
   // Kit items are scattered in the decoy rooms; the coach only lets you through with all of them.
@@ -52,6 +54,7 @@ export default class MazeScene extends Phaser.Scene {
       const pickup = this.physics.add.staticImage(item.x, item.y, item.name);
       this.physics.add.overlap(this.player, pickup, () => {
         pickup.destroy();
+        this.sound.play('pickup');
         this.hudIcons[item.name].setAlpha(1);
         this.kitLeft -= 1;
       });
