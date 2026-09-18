@@ -6,12 +6,69 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "package": "vite build && electron-builder"
   },
   "dependencies": {
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "electron": "^44.4.2",
+    "electron-builder": "^26.15.3",
     "vite": "^7.3.6"
+  },
+  "description": "Dinamo Tbilisi stand game: maze, quiz, goal",
+  "author": "Dinamo Matchday",
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "ge.dinamotbilisi.roadtogoal",
+    "productName": "Dinamo Road to Goal",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "electron/**"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.games"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-${version}-setup.${ext}"
+    }
   }
 }

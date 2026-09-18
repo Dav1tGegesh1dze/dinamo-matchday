@@ -496,12 +496,27 @@ Acceptance:
 ### 17. `feature/desktop-package` — downloadable Mac and Windows builds
 
 Electron wrapper around the built `dist/` (fullscreen window, offline, same localStorage data).
-`npm run package` produces `release/` with a `.dmg` + `.zip` for macOS and a portable `.exe` + `.zip`
-for Windows. Builds are attached to a GitHub **pre-release** so they can be downloaded without any tools.
-The web version keeps working unchanged.
+
+**Builds are made by GitHub Actions, never locally.** `.github/workflows/release.yml` runs on a
+macOS runner and a Windows runner, so each platform is built natively, and attaches the files to a
+GitHub **pre-release** that anyone can download from the repository's Releases page. It is triggered
+by pushing a `v*` tag, or manually from the Actions tab with a tag name.
+
+Outputs: macOS `.dmg` + `.zip` for Apple Silicon and Intel; Windows `-setup.exe` (NSIS installer,
+install location changeable) and `-win.zip` (unzip and run). Release text lives in
+`docs/RELEASE-NOTES.md`.
+
+`npm run package` still builds for the machine it runs on, for local testing only. Two gotchas it
+hits on an Apple Silicon Mac: the Windows NSIS installer needs Rosetta, and downloading the other
+platforms' Electron binaries is slow on a poor connection. Neither affects the CI builds.
+
+Note: the Mac app is ad-hoc signed (no Apple developer certificate), so on first open use
+right-click → Open. When launched from a terminal that sets `ELECTRON_RUN_AS_NODE` (e.g. inside
+VS Code) Electron starts as plain Node and exits; launch it from Finder / Explorer.
 
 Acceptance:
-- [ ] `npm run package` succeeds on macOS and produces the four files
+- [ ] Pushing a `v*` tag builds on both runners and publishes a pre-release with the Mac and Windows files
+- [ ] The files can be downloaded from the Releases page without any tools
 - [ ] The Mac app opens fullscreen, plays a full run offline, and keeps results between launches
 - [ ] The Windows build is attached to the GitHub release (to be smoke-tested on a Windows machine)
 

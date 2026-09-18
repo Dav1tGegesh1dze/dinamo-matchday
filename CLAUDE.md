@@ -43,8 +43,9 @@ Winners (fastest goals of the day) get merch. A full run should take about 2 min
 
 ## Workflow rules (always follow)
 - The plan and roadmap live in `docs/SPEC.md`. Read it before starting any feature.
-- Branches: `main` (final release only), `develop` (integration), `feature/<short-name>` (one per roadmap item).
-- NEVER commit or push to `main`.
+- Branches: `main` (final release only, protected on GitHub: no direct pushes, changes only via pull
+  request), `develop` (integration), `feature/<short-name>` (one per roadmap item).
+- NEVER commit or push to `main` (GitHub also blocks it).
 - Every feature: branch from latest `develop` → implement → `npm run build` passes →
   verify the acceptance criteria yourself (headless browser smoke test) → commit → push →
   open a PR into `develop` with `gh pr create`, acceptance criteria as a checklist →
