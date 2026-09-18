@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { applyMute } from '../lib/sound.js';
 
 const CHARACTERS = ['player', 'defender', 'keeper', 'coach'];
-const SOUNDS = ['whistle', 'correct', 'wrong', 'pickup', 'tackle', 'save', 'goal', 'step', 'crowd'];
+const SOUNDS = ['whistle', 'correct', 'wrong', 'pickup', 'tackle', 'save', 'goal', 'step', 'crowd', 'maze-music'];
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
