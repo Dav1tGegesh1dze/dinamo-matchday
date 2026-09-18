@@ -224,9 +224,10 @@ timing is a number in code.
 export function createInput(scene)   // returns { getAxis() → { x: -1..1, y: -1..1 } }
 ```
 
-- Today: reads arrow keys and WASD.
-- Later, if the stand is a touchscreen: a virtual joystick is added **inside `input.js`** and writes to the
-  same `{ x, y }`. `MazeScene` never changes.
+- Reads arrow keys and WASD.
+- On touch devices (`game.device.input.touch`) `input.js` also draws an on-screen joystick
+  (`joystick-base.png` / `joystick-knob.png`, bottom-left) and prefers it while it is being held.
+  `MazeScene` never changed for this.
 - Quiz buttons use plain pointer events, which already work with touch.
 
 **Why:** the maze depends on a direction, not on a keyboard. That is the whole abstraction.
@@ -268,9 +269,12 @@ then the stage's fail message (`Stay on the bench` / `Tackled!` / `Saved!`), the
 ## 13. Admin actions  (decision: keyboard combo on Result screen)
 
 - `Ctrl+Shift+E` → downloads the JSON export.
-- `Ctrl+Shift+R` → browser `confirm()` → resets the board.
+- `Ctrl+Shift+X` → browser `confirm()` → resets the board. (Changed from `Ctrl+Shift+R` on
+  2026-09-18: on Windows/Linux Chrome that combo is the hard-reload shortcut and the page cannot
+  reliably block it.)
+- Touch devices: tap the headline on the Result screen 5 times within 3 s → a small panel with
+  "Export JSON" and "Reset board" buttons.
 - Only active on the Result screen.
-- If the stand turns out to be touch-only, a hidden tap sequence is added in the polish phase.
 
 ---
 
@@ -413,15 +417,16 @@ Acceptance:
 ### 11. `feature/stand-mode` — kiosk hardening
 
 Fullscreen on Start, block right-click / text selection / pinch-zoom, re-check offline load from a
-built `dist/`, and, **only if the stand is confirmed to be a touchscreen**, add the virtual joystick
-inside `input.js` and a hidden tap sequence for the admin actions.
+built `dist/`. The stand device was still unconfirmed, so the touch parts were built too and only
+appear on touch devices: the virtual joystick inside `input.js` and the hidden tap sequence for
+the admin actions.
 
 Acceptance:
 - [ ] Pressing Start enters fullscreen
 - [ ] Right-click and text selection are disabled on the game
 - [ ] `npx vite preview` with Wi-Fi off runs a full run with no errors in the console
-- [ ] (touch only) On-screen joystick moves the player in the maze
-- [ ] (touch only) Hidden tap sequence on Result opens Export / Reset
+- [ ] On a touch device the on-screen joystick moves the player in the maze
+- [ ] On a touch device tapping the Result headline 5× opens Export / Reset
 
 ---
 

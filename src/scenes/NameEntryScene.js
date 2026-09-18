@@ -37,6 +37,7 @@ export default class NameEntryScene extends Phaser.Scene {
     const tryStart = () => {
       const name = input.value.trim();
       if (!name) return;
+      if (!this.scale.isFullscreen) this.scale.startFullscreen();
       startRun(name);
       this.sound.play('whistle');
       this.scene.start('Maze');
