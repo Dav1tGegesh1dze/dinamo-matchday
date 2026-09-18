@@ -11,6 +11,9 @@ const strings = {
     roomTunnel: 'გვირაბი',
     substitutedIn: 'შედიხარ თამაშში!',
     stayOnBench: 'დარჩი სკამზე',
+    tackled: 'წაგართვეს!',
+    saved: 'მეკარემ დაიჭირა!',
+    goal: 'გოოოლ!',
   },
   en: {
     title: 'Dinamo: Road to Goal',
@@ -22,6 +25,9 @@ const strings = {
     roomTunnel: 'Tunnel',
     substitutedIn: 'You\'re on!',
     stayOnBench: 'Stay on the bench',
+    tackled: 'Tackled!',
+    saved: 'Saved!',
+    goal: 'GOAL!',
   },
 };
 

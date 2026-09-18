@@ -12,7 +12,9 @@ export function createTimer(scene) {
     .text(scene.scale.width - 24, 20, '', { fontSize: '36px', color: '#ffffff', fontStyle: 'bold', backgroundColor: 'rgba(0,0,0,0.55)', padding: { x: 12, y: 4 } })
     .setOrigin(1, 0)
     .setDepth(1000);
-  scene.events.on('update', () => text.setText(formatTime(Date.now() - run.startedAt)));
+  const onUpdate = () => text.setText(formatTime((run.finishedAt || Date.now()) - run.startedAt));
+  scene.events.on('update', onUpdate);
+  scene.events.once('shutdown', () => scene.events.off('update', onUpdate));
   return text;
 }
 

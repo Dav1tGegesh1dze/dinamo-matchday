@@ -14,6 +14,9 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('pitch', 'pitch.png');
     this.load.image('board', 'board.png');
     this.load.image('ball', 'ball.png');
+    this.load.image('defender', 'defender.png');
+    this.load.image('keeper', 'keeper.png');
+    this.load.image('goal', 'goal.png');
   }
 
   create() {
