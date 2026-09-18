@@ -200,6 +200,17 @@ timing is a number in code.
 - Reaching the `coach` zone launches Question 1.
 - Target run through the maze: 20–40 s. If it is too fast or slow, **edit the map, not the code.**
 
+### Challenge mechanics (added 2026-09-18, developer found the plain maze too easy)
+
+- **Limited vision.** A full-map black overlay (alpha 0.94) is masked by `public/assets/vision.png`,
+  a soft white disc that follows the player (inverted bitmap mask). The player sees ~110 px clearly
+  and nothing beyond ~200 px, so the layout and the room labels must be discovered by walking.
+- **Collect your kit.** The `objects` layer has `kit` points (`boots` in Physio, `shirt` in Showers).
+  Walking over one collects it; two icons top-left light up. Entering the coach zone without the full
+  kit shows "Get your kit first!" and does nothing else. This turns the decoy rooms into required
+  detours and makes the maze a search rather than a walk.
+- Both mechanics are data-driven: move or add kit items in Tiled, no code changes.
+
 **Why:** layout tuning becomes a visual edit. Decoy rooms and labels live in the map alongside walls.
 
 **Rejected:** a hand-typed 2D grid in JS (same idea, no editor), and hardcoded wall rectangles
@@ -413,6 +424,16 @@ Acceptance:
 - [ ] (touch only) Hidden tap sequence on Result opens Export / Reset
 
 ---
+
+### 12. `feature/maze-challenge` — limited vision + kit collection (added 2026-09-18)
+
+See §8 "Challenge mechanics". Built after feature 8 at the developer's request.
+
+Acceptance:
+- [ ] Only a circle around the player is visible; labels and the coach are hidden until close
+- [ ] Boots (Physio) and shirt (Showers) can be picked up; the two HUD icons light up
+- [ ] Touching the coach with kit missing shows "Get your kit first!" and does not start the quiz
+- [ ] With both items the coach asks Question 1 as before
 
 ## Open items waiting on the club
 

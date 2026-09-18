@@ -11,7 +11,7 @@
  "tilewidth": 32,
  "tileheight": 32,
  "nextlayerid": 4,
- "nextobjectid": 7,
+ "nextobjectid": 9,
  "tilesets": [
   {
    "firstgid": 1,
@@ -1902,6 +1902,30 @@
      "point": true,
      "x": 1161.6,
      "y": 563.2,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 7,
+     "name": "boots",
+     "type": "kit",
+     "point": true,
+     "x": 816.0,
+     "y": 112.0,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 8,
+     "name": "shirt",
+     "type": "kit",
+     "point": true,
+     "x": 272.0,
+     "y": 432.0,
      "width": 0,
      "height": 0,
      "rotation": 0,

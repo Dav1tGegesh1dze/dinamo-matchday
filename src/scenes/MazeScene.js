@@ -6,6 +6,7 @@ import { finishRun } from '../lib/run.js';
 import { askQuestion } from './QuestionScene.js';
 
 const SPEED = 150;
+const HINT_MS = 1500;
 
 export default class MazeScene extends Phaser.Scene {
   constructor() {
@@ -35,11 +36,39 @@ export default class MazeScene extends Phaser.Scene {
     this.physics.add.collider(this.player, walls);
     this.physics.add.overlap(this.player, coachZone, () => this.reachCoach());
 
+    this.createKit(objects.filter((o) => o.type === 'kit'));
+    this.createDarkness(map.widthInPixels, map.heightInPixels);
+
     this.controls = createInput(this);
     createTimer(this);
   }
 
+  // Kit items are scattered in the decoy rooms; the coach only lets you through with all of them.
+  createKit(items) {
+    this.kitLeft = items.length;
+    this.hudIcons = {};
+    items.forEach((item, i) => {
+      this.hudIcons[item.name] = this.add.image(36 + i * 44, 36, item.name).setScale(1.5).setAlpha(0.25).setDepth(1000);
+      const pickup = this.physics.add.staticImage(item.x, item.y, item.name);
+      this.physics.add.overlap(this.player, pickup, () => {
+        pickup.destroy();
+        this.hudIcons[item.name].setAlpha(1);
+        this.kitLeft -= 1;
+      });
+    });
+  }
+
+  // Everything outside a soft circle around the player is hidden.
+  createDarkness(width, height) {
+    this.vision = this.make.image({ key: 'vision', add: false });
+    const darkness = this.add.rectangle(0, 0, width, height, 0x000000).setOrigin(0).setDepth(500);
+    const mask = darkness.createBitmapMask(this.vision);
+    mask.invertAlpha = true;
+    darkness.setMask(mask);
+  }
+
   reachCoach() {
+    if (this.kitLeft > 0) return this.showHint();
     this.physics.pause();
     askQuestion(this, 1, (correct) => {
       if (!correct) finishRun(false);
@@ -47,8 +76,21 @@ export default class MazeScene extends Phaser.Scene {
     });
   }
 
+  showHint() {
+    if (this.hint) return;
+    this.hint = this.add
+      .text(Phaser.Math.Clamp(this.player.x, 180, this.scale.width - 180), this.player.y - 40, t('kitFirst'), { fontSize: '22px', color: '#ffffff', backgroundColor: '#e30613', padding: { x: 10, y: 6 } })
+      .setOrigin(0.5)
+      .setDepth(1000);
+    this.time.delayedCall(HINT_MS, () => {
+      this.hint.destroy();
+      this.hint = null;
+    });
+  }
+
   update() {
     const { x, y } = this.controls.getAxis();
     this.player.setVelocity(x * SPEED, y * SPEED);
+    this.vision.setPosition(this.player.x, this.player.y);
   }
 }
