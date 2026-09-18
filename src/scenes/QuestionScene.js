@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { questions, COUNTDOWN_SECONDS, POOL_BY_STAGE } from '../data/questions.js';
 import { getLang } from '../lib/i18n.js';
 import { createTimer } from '../lib/hud.js';
+import { setStage } from '../lib/run.js';
 
 const BUTTON_POSITIONS = [
   [400, 440],
@@ -20,7 +21,19 @@ const BUTTON_STYLE = {
 const REVEAL_MS = 1500;
 const CONFIRM_MS = 600;
 
-// Overlay scene. Launch with { stage: 1..4 }; emits 'answered' (true|false) on its events, then stops.
+// Pause `scene`, show the question for `stage` on top of it, resume and report the result.
+export function askQuestion(scene, stage, onAnswered) {
+  setStage(stage);
+  scene.scene.get('Question').events.once('answered', (correct) => {
+    scene.scene.resume();
+    onAnswered(correct);
+  });
+  scene.scene.pause();
+  scene.scene.launch('Question', { stage });
+  scene.scene.bringToTop('Question');
+}
+
+// Overlay scene. Launched by askQuestion with { stage: 1..4 }; emits 'answered' (true|false) on its events, then stops.
 export default class QuestionScene extends Phaser.Scene {
   constructor() {
     super('Question');

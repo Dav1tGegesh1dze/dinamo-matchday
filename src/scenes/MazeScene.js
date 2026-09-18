@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import { createInput } from '../lib/input.js';
 import { createTimer, flashMessage } from '../lib/hud.js';
 import { t } from '../lib/i18n.js';
+import { finishRun } from '../lib/run.js';
+import { askQuestion } from './QuestionScene.js';
 
 const SPEED = 150;
 
@@ -39,12 +41,10 @@ export default class MazeScene extends Phaser.Scene {
 
   reachCoach() {
     this.physics.pause();
-    this.scene.get('Question').events.once('answered', (correct) => {
-      this.scene.resume();
+    askQuestion(this, 1, (correct) => {
+      if (!correct) finishRun(false);
       flashMessage(this, t(correct ? 'substitutedIn' : 'stayOnBench'), 1500, correct ? 'Cutscene' : 'Result');
     });
-    this.scene.pause();
-    this.scene.launch('Question', { stage: 1 });
   }
 
   update() {
