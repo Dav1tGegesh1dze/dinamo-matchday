@@ -42,7 +42,10 @@ export default class MazeScene extends Phaser.Scene {
 
     this.controls = createInput(this);
     createTimer(this);
-    this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.player.body.speed > 0 && this.sound.play('step') });
+    this.time.addEvent({ delay: STEP_MS, loop: true, callback: () => this.player.body.speed > 0 && this.sound.play('step', { volume: 0.4 }) });
+    const music = this.sound.add('maze-music', { loop: true, volume: 0.7 });
+    music.play();
+    this.events.once('shutdown', () => music.stop());
   }
 
   // Kit items are scattered in the decoy rooms; the coach only lets you through with all of them.
