@@ -440,6 +440,73 @@ Acceptance:
 - [ ] Touching the coach with kit missing shows "Get your kit first!" and does not start the quiz
 - [ ] With both items the coach asks Question 1 as before
 
+---
+
+# PHASE 2 (requested by the developer on 2026-09-18 after playing the finished Phase 1)
+
+Same rules: one branch per item, PR into `develop`, verified before merge. Build order as listed.
+
+### 13. `feature/kit-locations` — pickups where they belong
+
+The kit (shirt, boots) lives in the **dressing room**; the Physio room holds **ankle tape**. All three
+are required before the coach lets you through. Showers stays a pure decoy. Items remain `kit`
+points in `maze.json`, so moving them is a Tiled edit. Three HUD icons top-left.
+
+Acceptance:
+- [ ] Shirt and boots are picked up in the dressing room; tape in Physio
+- [ ] Coach refuses with a hint until all three are collected
+- [ ] Showers contain nothing
+
+### 14. `feature/maze-audio` — softer footsteps and relaxing music in the maze
+
+Replace the footstep click with a soft, quiet tap; add a calm ambient music loop
+(`maze-music.wav`) that starts with the maze and stops when the cutscene starts (the crowd takes over).
+
+Acceptance:
+- [ ] Calm music plays during the maze only; the crowd replaces it from the cutscene onwards
+- [ ] Footsteps are soft and clearly quieter than the music
+- [ ] Mute toggle silences both
+
+### 15. `feature/registration` — username, mobile number, e-mail
+
+Name entry becomes a registration form: **username**, **mobile number**, **e-mail**, all required.
+Basic validation (username 2–20 chars; phone `+` and 9–15 digits; e-mail `x@y.z`) with an inline error
+message in KA/EN. The three values are stored on the run and saved with **every** leaderboard attempt
+(`{ name, phone, email, timeMs, stageReached, scored, date }`) so the club can call the winners from the
+JSON export. The on-screen leaderboard shows only the username.
+
+Privacy note: contact data lives only in the stand device's localStorage and in the exported JSON.
+The club should reset the board after the event.
+
+Acceptance:
+- [ ] Start is blocked until all three fields are valid; an error line explains which one is wrong
+- [ ] The exported JSON contains phone and e-mail for each attempt
+- [ ] The Result leaderboard shows usernames only
+
+### 16. `feature/retry` — play again without re-registering
+
+Result screen gets a **Retry** button (also Enter). It starts a new run for the same registered player,
+straight into the maze, with a fresh timer. The 15 s auto-return to registration stays for the next player.
+
+Acceptance:
+- [ ] Retry (button or Enter) on Result starts a new run from the maze with the timer at 0:00.0
+- [ ] The retried run is saved as a separate attempt with the same name / phone / e-mail
+- [ ] Doing nothing on Result still returns to registration after ~15 s
+
+### 17. `feature/desktop-package` — downloadable Mac and Windows builds
+
+Electron wrapper around the built `dist/` (fullscreen window, offline, same localStorage data).
+`npm run package` produces `release/` with a `.dmg` + `.zip` for macOS and a portable `.exe` + `.zip`
+for Windows. Builds are attached to a GitHub **pre-release** so they can be downloaded without any tools.
+The web version keeps working unchanged.
+
+Acceptance:
+- [ ] `npm run package` succeeds on macOS and produces the four files
+- [ ] The Mac app opens fullscreen, plays a full run offline, and keeps results between launches
+- [ ] The Windows build is attached to the GitHub release (to be smoke-tested on a Windows machine)
+
+---
+
 ## Open items waiting on the club
 
 - Real questions (4 pools × ~3, Georgian + English) → replace placeholders in `src/data/questions.js`
