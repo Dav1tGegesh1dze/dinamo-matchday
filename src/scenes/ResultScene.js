@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { run } from '../lib/run.js';
-import { save, getRanked } from '../lib/leaderboard.js';
+import { save, getRanked, exportJson, reset } from '../lib/leaderboard.js';
 import { formatTime } from '../lib/hud.js';
 import { t } from '../lib/i18n.js';
 
@@ -39,6 +39,23 @@ export default class ResultScene extends Phaser.Scene {
     if (own >= TOP) this.addRow(own, attempt, 240 + (TOP + 0.5) * ROW_H, true);
 
     this.time.delayedCall(RETURN_MS, () => this.scene.start('NameEntry'));
+    this.addAdminKeys();
+  }
+
+  // Hidden admin combos, only on this screen: Ctrl+Shift+E exports, Ctrl+Shift+R resets.
+  addAdminKeys() {
+    const combo = (event) => event.ctrlKey && event.shiftKey;
+    this.input.keyboard.on('keydown-E', (event) => {
+      if (combo(event)) exportJson();
+    });
+    this.input.keyboard.on('keydown-R', (event) => {
+      if (!combo(event)) return;
+      event.preventDefault();
+      if (window.confirm(t('confirmReset'))) {
+        reset();
+        this.scene.start('NameEntry');
+      }
+    });
   }
 
   addRow(index, attempt, y, mine) {
