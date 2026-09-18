@@ -29,6 +29,7 @@ const strings = {
     leaderboard: 'საუკეთესო დროები',
     noScores: 'ჯერ არავის გაუტანია გოლი',
     confirmReset: 'წავშალოთ ყველა შედეგი?',
+    retry: 'თავიდან',
   },
   en: {
     title: 'Dinamo: Road to Goal',
@@ -58,6 +59,7 @@ const strings = {
     leaderboard: 'Fastest goals',
     noScores: 'Nobody has scored yet',
     confirmReset: 'Delete all results?',
+    retry: 'Play again',
   },
 };
 

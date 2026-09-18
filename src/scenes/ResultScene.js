@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { run } from '../lib/run.js';
+import { run, startRun } from '../lib/run.js';
 import { save, getRanked, exportJson, reset } from '../lib/leaderboard.js';
 import { formatTime } from '../lib/hud.js';
 import { t } from '../lib/i18n.js';
@@ -47,7 +47,23 @@ export default class ResultScene extends Phaser.Scene {
     if (own >= TOP) this.addRow(own, attempt, 240 + (TOP + 0.5) * ROW_H, true);
 
     this.time.delayedCall(RETURN_MS, () => this.scene.start('NameEntry'));
+    this.addRetry(width - 150, 60);
     this.addAdminKeys();
+  }
+
+  // Same registered player, new run straight into the maze.
+  addRetry(x, y) {
+    const retry = () => {
+      startRun(run);
+      this.sound.play('whistle');
+      this.scene.start('Maze');
+    };
+    this.add
+      .text(x, y, t('retry'), { fontSize: '30px', color: '#ffffff', backgroundColor: '#e30613', padding: { x: 24, y: 12 } })
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', retry);
+    this.input.keyboard.on('keydown-ENTER', retry);
   }
 
   // Hidden admin access, only on this screen: Ctrl+Shift+E exports, Ctrl+Shift+X resets,
