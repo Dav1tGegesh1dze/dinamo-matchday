@@ -13,7 +13,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.setPath('assets');
     this.load.tilemapTiledJSON('maze', 'maze.json');
     CHARACTERS.forEach((key) => this.load.spritesheet(key, `${key}.png`, { frameWidth: 32, frameHeight: 48 }));
-    ['tiles', 'pitch', 'board', 'ball', 'goal', 'vision', 'boots', 'shirt', 'panel', 'button', 'bar', 'crest', 'bg', 'sound-on', 'sound-off'].forEach(
+    ['tiles', 'pitch', 'board', 'ball', 'goal', 'vision', 'boots', 'shirt', 'panel', 'button', 'bar', 'crest', 'bg', 'sound-on', 'sound-off', 'joystick-base', 'joystick-knob'].forEach(
       (key) => this.load.image(key, `${key}.png`),
     );
     SOUNDS.forEach((key) => this.load.audio(key, `${key}.wav`));
@@ -21,6 +21,7 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     applyMute(this);
+    this.input.mouse.disableContextMenu();
     CHARACTERS.forEach((key) =>
       this.anims.create({
         key: `${key}-walk`,
