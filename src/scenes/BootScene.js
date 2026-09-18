@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 
+const CHARACTERS = ['player', 'defender', 'keeper', 'coach'];
+
 export default class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot');
@@ -8,21 +10,21 @@ export default class BootScene extends Phaser.Scene {
   preload() {
     this.load.setPath('assets');
     this.load.tilemapTiledJSON('maze', 'maze.json');
-    this.load.image('tiles', 'tiles.png');
-    this.load.image('player', 'player.png');
-    this.load.image('coach', 'coach.png');
-    this.load.image('pitch', 'pitch.png');
-    this.load.image('board', 'board.png');
-    this.load.image('ball', 'ball.png');
-    this.load.image('defender', 'defender.png');
-    this.load.image('keeper', 'keeper.png');
-    this.load.image('goal', 'goal.png');
-    this.load.image('vision', 'vision.png');
-    this.load.image('boots', 'boots.png');
-    this.load.image('shirt', 'shirt.png');
+    CHARACTERS.forEach((key) => this.load.spritesheet(key, `${key}.png`, { frameWidth: 32, frameHeight: 48 }));
+    ['tiles', 'pitch', 'board', 'ball', 'goal', 'vision', 'boots', 'shirt', 'panel', 'button', 'bar', 'crest', 'bg'].forEach((key) =>
+      this.load.image(key, `${key}.png`),
+    );
   }
 
   create() {
+    CHARACTERS.forEach((key) =>
+      this.anims.create({
+        key: `${key}-walk`,
+        frames: this.anims.generateFrameNumbers(key, { start: 1, end: 3 }),
+        frameRate: 8,
+        repeat: -1,
+      }),
+    );
     this.scene.start('NameEntry');
   }
 }

@@ -13,6 +13,8 @@ export default class NameEntryScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    this.add.image(width / 2, height / 2, 'bg');
+    this.add.image(width / 2, height / 2 - 260, 'crest');
 
     this.add.text(width / 2, height / 2 - 160, t('title'), { fontSize: '64px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
 
