@@ -10,7 +10,7 @@ Winners (fastest goals of the day) get merch. A full run should take about 2 min
 - Keep code simple. Zero dead code, no unused abstractions, no features not listed here.
 
 ## Game flow
-1. **Name entry** – player enters a nickname, presses Start. The run timer starts here.
+1. **Registration** – player enters a nickname, mobile number and e-mail, presses Start. The run timer starts here.
 2. **Dressing room** – top-down maze (dressing room → tunnel), player-controlled.
    Decoy rooms (Physio, Showers). Target: 20–40 seconds. Reaching the coach triggers Question 1.
 3. **Question 1 (easy)** – the coach asks. Correct → substituted in. Wrong → "Stay on the bench" → game over.
@@ -28,7 +28,7 @@ Winners (fastest goals of the day) get merch. A full run should take about 2 min
 - Real questions will come from the club later; use placeholders until then.
 
 ## Leaderboard
-- Save every attempt: `{ name, timeMs, stageReached, scored, date }`
+- Save every attempt: `{ name, phone, email, timeMs, stageReached, scored, date }` (contact data so the club can call winners)
 - Main ranking: only runs where `scored === true`, sorted by fastest `timeMs`
 - Hidden admin key combo: export results as a JSON download, and reset the board
 

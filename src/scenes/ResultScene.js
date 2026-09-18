@@ -23,6 +23,8 @@ export default class ResultScene extends Phaser.Scene {
     this.add.image(width / 2, height / 2, 'bg');
     const attempt = {
       name: run.name,
+      phone: run.phone,
+      email: run.email,
       timeMs: run.finishedAt - run.startedAt,
       stageReached: run.stage,
       scored: run.scored,

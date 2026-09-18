@@ -3,7 +3,12 @@ const KEY = 'dinamo-lang';
 const strings = {
   ka: {
     title: 'დინამო: გზა გოლისკენ',
-    namePlaceholder: 'შენი სახელი',
+    namePlaceholder: 'სახელი / მეტსახელი',
+    phonePlaceholder: 'მობილური ნომერი',
+    emailPlaceholder: 'ელ-ფოსტა',
+    errName: 'სახელი: 2–20 სიმბოლო',
+    errPhone: 'მობილური: 9–15 ციფრი',
+    errEmail: 'ელ-ფოსტა არასწორია',
     start: 'დაწყება',
     roomDressing: 'გასახდელი',
     roomPhysio: 'ფიზიო',
@@ -27,7 +32,12 @@ const strings = {
   },
   en: {
     title: 'Dinamo: Road to Goal',
-    namePlaceholder: 'Your name',
+    namePlaceholder: 'Name / nickname',
+    phonePlaceholder: 'Mobile number',
+    emailPlaceholder: 'E-mail',
+    errName: 'Name: 2–20 characters',
+    errPhone: 'Mobile: 9–15 digits',
+    errEmail: 'E-mail looks wrong',
     start: 'Start',
     roomDressing: 'Dressing room',
     roomPhysio: 'Physio',
