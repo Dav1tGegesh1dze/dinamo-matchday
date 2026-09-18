@@ -16,6 +16,7 @@ export default class ResultScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    this.sound.stopByKey('crowd');
     this.add.image(width / 2, height / 2, 'bg');
     const attempt = {
       name: run.name,

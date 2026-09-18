@@ -84,6 +84,7 @@ export default class QuestionScene extends Phaser.Scene {
     this.countdown.remove();
     this.buttons.forEach((b) => b.disableInteractive());
     const correct = chosen === correctButton;
+    this.sound.play(correct ? 'correct' : 'wrong');
     this.paint(correctButton, GREEN);
     if (!correct && chosen >= 0) this.paint(chosen, RED);
     this.time.delayedCall(correct ? CONFIRM_MS : REVEAL_MS, () => {

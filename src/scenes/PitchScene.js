@@ -64,12 +64,14 @@ export default class PitchScene extends Phaser.Scene {
 
   lose(opponent, messageKey) {
     finishRun(false);
+    this.sound.play(messageKey);
     this.playerSprite.anims.stop();
     this.tweens.add({ targets: opponent, x: this.runner.x + 30, y: this.runner.y, duration: 300, ease: 'Cubic.easeIn' });
     flashMessage(this, t(messageKey), 1500, 'Result');
   }
 
   score() {
+    this.sound.play('goal');
     const keeper = this.opponents[STAGES.length - 1];
     this.runner.remove(this.ball);
     this.ball.setPosition(this.runner.x + 30, this.runner.y + 12);

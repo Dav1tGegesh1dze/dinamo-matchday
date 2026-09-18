@@ -12,6 +12,7 @@ export default class CutsceneScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     this.add.image(width / 2, height / 2, 'pitch');
+    this.sound.play('crowd', { loop: true, volume: 0.5 });
 
     const player = this.add.sprite(-40, 560, 'player').play('player-walk');
     const board = this.add.container(width / 2, height + 100, [

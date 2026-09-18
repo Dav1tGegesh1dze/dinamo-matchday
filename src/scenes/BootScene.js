@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
+import { applyMute } from '../lib/sound.js';
 
 const CHARACTERS = ['player', 'defender', 'keeper', 'coach'];
+const SOUNDS = ['whistle', 'correct', 'wrong', 'pickup', 'tackle', 'save', 'goal', 'step', 'crowd'];
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -11,12 +13,14 @@ export default class BootScene extends Phaser.Scene {
     this.load.setPath('assets');
     this.load.tilemapTiledJSON('maze', 'maze.json');
     CHARACTERS.forEach((key) => this.load.spritesheet(key, `${key}.png`, { frameWidth: 32, frameHeight: 48 }));
-    ['tiles', 'pitch', 'board', 'ball', 'goal', 'vision', 'boots', 'shirt', 'panel', 'button', 'bar', 'crest', 'bg'].forEach((key) =>
-      this.load.image(key, `${key}.png`),
+    ['tiles', 'pitch', 'board', 'ball', 'goal', 'vision', 'boots', 'shirt', 'panel', 'button', 'bar', 'crest', 'bg', 'sound-on', 'sound-off'].forEach(
+      (key) => this.load.image(key, `${key}.png`),
     );
+    SOUNDS.forEach((key) => this.load.audio(key, `${key}.wav`));
   }
 
   create() {
+    applyMute(this);
     CHARACTERS.forEach((key) =>
       this.anims.create({
         key: `${key}-walk`,

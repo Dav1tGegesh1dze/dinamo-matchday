@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { startRun } from '../lib/run.js';
 import { getLang, setLang, t } from '../lib/i18n.js';
+import { isMuted, toggleMute } from '../lib/sound.js';
 
 const INPUT_STYLE =
   'width: 480px; padding: 12px 16px; font-size: 32px; text-align: center; ' +
@@ -37,6 +38,7 @@ export default class NameEntryScene extends Phaser.Scene {
       const name = input.value.trim();
       if (!name) return;
       startRun(name);
+      this.sound.play('whistle');
       this.scene.start('Maze');
     };
     const refreshButton = () => startButton.setAlpha(input.value.trim() ? 1 : 0.4);
@@ -48,6 +50,12 @@ export default class NameEntryScene extends Phaser.Scene {
     startButton.on('pointerdown', tryStart);
 
     this.addLangToggle(width - 40, height - 40);
+    this.addMuteToggle(40, height - 40);
+  }
+
+  addMuteToggle(x, y) {
+    const icon = this.add.image(x, y, isMuted() ? 'sound-off' : 'sound-on').setInteractive({ useHandCursor: true });
+    icon.on('pointerdown', () => icon.setTexture(toggleMute(this) ? 'sound-off' : 'sound-on'));
   }
 
   addLangToggle(x, y) {
