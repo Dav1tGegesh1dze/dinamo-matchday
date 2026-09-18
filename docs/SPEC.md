@@ -496,12 +496,18 @@ Acceptance:
 ### 17. `feature/desktop-package` — downloadable Mac and Windows builds
 
 Electron wrapper around the built `dist/` (fullscreen window, offline, same localStorage data).
-`npm run package` produces `release/` with a `.dmg` + `.zip` for macOS and a portable `.exe` + `.zip`
-for Windows. Builds are attached to a GitHub **pre-release** so they can be downloaded without any tools.
+`npm run package` produces `release/` with a `.dmg` + `.zip` for macOS (Apple Silicon and Intel) and a
+`.zip` for Windows x64 containing `Dinamo Road to Goal.exe` (unzip, double-click). A Windows installer
+(`portable` / NSIS) cannot be built on an Apple Silicon Mac without Rosetta, so the zip is the Windows
+format. Builds are attached to a GitHub **pre-release** so they can be downloaded without any tools.
 The web version keeps working unchanged.
 
+Notes: the Mac app is ad-hoc signed (no Apple developer certificate), so on first open use
+right-click → Open. When launched from a terminal that sets `ELECTRON_RUN_AS_NODE` (e.g. inside VS Code)
+Electron starts as plain Node and exits; launch it from Finder / Explorer.
+
 Acceptance:
-- [ ] `npm run package` succeeds on macOS and produces the four files
+- [ ] `npm run package` succeeds on macOS and produces the Mac dmg/zip files and the Windows zip
 - [ ] The Mac app opens fullscreen, plays a full run offline, and keeps results between launches
 - [ ] The Windows build is attached to the GitHub release (to be smoke-tested on a Windows machine)
 
